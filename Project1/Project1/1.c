@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
 #include <libavcodec/avcodec.h>
 
 #include <libavutil/opt.h>
@@ -18,7 +20,6 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
     FILE* outfile)
 {
     int ret;
-
     /* send the frame to the encoder */
     if (frame)
         printf("Send frame %3"PRId64"\n", frame->pts);
@@ -95,11 +96,19 @@ int main(int argc, char** argv)
      * will always be I frame irrespective to gop_size
      */
     c->gop_size = 10;
-    c->max_b_frames = 1;
+
+    
+    c->max_b_frames = 0; // should be 0 when using zerolatency
+
     c->pix_fmt = AV_PIX_FMT_YUV420P;
 
-    if (codec->id == AV_CODEC_ID_H264)
+    // Set preset and tune for libx264 and libx265
+    if (codec->id == AV_CODEC_ID_H264 || codec->id == AV_CODEC_ID_H265) {
         av_opt_set(c->priv_data, "preset", "slow", 0);
+        av_opt_set(c->priv_data, "tune", "zerolatency", 0);
+    }
+
+        
 
     /* open it */
     ret = avcodec_open2(c, codec, NULL);
