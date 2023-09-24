@@ -1,0 +1,17 @@
+﻿  源.cpp
+源.obj : error LNK2019: 无法解析的外部符号 "struct AVFrame * __cdecl av_frame_alloc(void)" (?av_frame_alloc@@YAPAUAVFrame@@XZ)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "void __cdecl av_frame_free(struct AVFrame * *)" (?av_frame_free@@YAXPAPAUAVFrame@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl av_frame_get_buffer(struct AVFrame *,int)" (?av_frame_get_buffer@@YAHPAUAVFrame@@H@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl av_frame_make_writable(struct AVFrame *)" (?av_frame_make_writable@@YAHPAUAVFrame@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "struct AVPacket * __cdecl av_packet_alloc(void)" (?av_packet_alloc@@YAPAUAVPacket@@XZ)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "void __cdecl av_packet_free(struct AVPacket * *)" (?av_packet_free@@YAXPAPAUAVPacket@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "void __cdecl av_packet_unref(struct AVPacket *)" (?av_packet_unref@@YAXPAUAVPacket@@@Z)，函数 "void __cdecl encode(struct AVCodecContext *,struct AVFrame *,struct AVPacket *,struct _iobuf *)" (?encode@@YAXPAUAVCodecContext@@PAUAVFrame@@PAUAVPacket@@PAU_iobuf@@@Z) 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "struct AVCodec * __cdecl avcodec_find_encoder_by_name(char const *)" (?avcodec_find_encoder_by_name@@YAPAUAVCodec@@PBD@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "struct AVCodecContext * __cdecl avcodec_alloc_context3(struct AVCodec const *)" (?avcodec_alloc_context3@@YAPAUAVCodecContext@@PBUAVCodec@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "void __cdecl avcodec_free_context(struct AVCodecContext * *)" (?avcodec_free_context@@YAXPAPAUAVCodecContext@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl avcodec_open2(struct AVCodecContext *,struct AVCodec const *,struct AVDictionary * *)" (?avcodec_open2@@YAHPAUAVCodecContext@@PBUAVCodec@@PAPAUAVDictionary@@@Z)，函数 _main 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl avcodec_send_frame(struct AVCodecContext *,struct AVFrame const *)" (?avcodec_send_frame@@YAHPAUAVCodecContext@@PBUAVFrame@@@Z)，函数 "void __cdecl encode(struct AVCodecContext *,struct AVFrame *,struct AVPacket *,struct _iobuf *)" (?encode@@YAXPAUAVCodecContext@@PAUAVFrame@@PAUAVPacket@@PAU_iobuf@@@Z) 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl avcodec_receive_packet(struct AVCodecContext *,struct AVPacket *)" (?avcodec_receive_packet@@YAHPAUAVCodecContext@@PAUAVPacket@@@Z)，函数 "void __cdecl encode(struct AVCodecContext *,struct AVFrame *,struct AVPacket *,struct _iobuf *)" (?encode@@YAXPAUAVCodecContext@@PAUAVFrame@@PAUAVPacket@@PAU_iobuf@@@Z) 中引用了该符号
+源.obj : error LNK2019: 无法解析的外部符号 "int __cdecl av_opt_set(void *,char const *,char const *,int)" (?av_opt_set@@YAHPAXPBD1H@Z)，函数 _main 中引用了该符号
+C:\Users\newas\Documents\hxj\peer\ffmpeglibtest\ffmpeg_lib_test\ffmpeglib\lib\avcodec.lib : warning LNK4272: 库计算机类型“x64”与目标计算机类型“x86”冲突
+C:\Users\newas\source\repos\Project1\Debug\Project1.exe : fatal error LNK1120: 14 个无法解析的外部命令
