@@ -10,19 +10,18 @@
 #include <string.h>
 
 
-
+extern "C" {
 #include <libavcodec/avcodec.h>
-
 #include <libavutil/opt.h>
 #include <libavutil/imgutils.h>
-
+}
 static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
     FILE* outfile)
 {
     int ret;
     /* send the frame to the encoder */
     if (frame)
-        printf("Send frame %3"PRId64"\n", frame->pts);
+        printf("Send frame %3lld\n", frame->pts);
 
     ret = avcodec_send_frame(enc_ctx, frame);
     if (ret < 0) {
@@ -39,7 +38,7 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
             exit(1);
         }
 
-        printf("Write packet %3"PRId64" (size=%5d)\n", pkt->pts, pkt->size);
+        printf("Write packet %3lld (size=%5d)\n", pkt->pts, pkt->size);
         fwrite(pkt->data, 1, pkt->size, outfile);
         av_packet_unref(pkt);
     }
@@ -47,14 +46,20 @@ static void encode(AVCodecContext* enc_ctx, AVFrame* frame, AVPacket* pkt,
 
 int main(int argc, char** argv)
 {
+
+    // input yuv420p
+    const char* input_file = "C:/Users/Administrator/Documents/sequences/ParkScene_1920x1080_24.yuv";
+
+    FILE* f_input = fopen(input_file, "rb");
+
     const char* filename, * codec_name;
     const AVCodec* codec;
-    AVCodecContext* c = NULL;
+    AVCodecContext* c = NULL; // encoder context
     int i, ret, x, y;
-    FILE* f;
+    FILE* f;   // output file
     AVFrame* frame;
     AVPacket* pkt;
-    uint8_t endcode[] = { 0, 0, 1, 0xb7 };
+    uint8_t endcode[] = { 0, 0, 1, 0xb7 }; 
 
     if (argc <= 2) {
         fprintf(stderr, "Usage: %s <output file> <codec name>\n", argv[0]);
@@ -81,13 +86,19 @@ int main(int argc, char** argv)
         exit(1);
 
     /* put sample parameters */
-    c->bit_rate = 400000;
+    c->bit_rate = 4000000;
     /* resolution must be a multiple of two */
-    c->width = 352;
-    c->height = 288;
+    c->width = 1920;
+    c->height = 1080;
+
     /* frames per second */
-    c->time_base = (AVRational){ 1, 25 };
-    c->framerate = (AVRational){ 25, 1 };
+    // c->time_base = (AVRational){ 1, 25 };
+    // c->framerate = (AVRational){ 25, 1 };
+
+    // CPP
+    c->time_base = { 1, 25 };
+    c->framerate = { 25, 1 };
+
 
     /* emit one intra frame every ten frames
      * check frame pict_type before passing frame
@@ -104,8 +115,9 @@ int main(int argc, char** argv)
 
     // Set preset and tune for libx264 and libx265
     if (codec->id == AV_CODEC_ID_H264 || codec->id == AV_CODEC_ID_H265) {
-        av_opt_set(c->priv_data, "preset", "slow", 0);
+        av_opt_set(c->priv_data, "preset", "ultrafast", 0);
         av_opt_set(c->priv_data, "tune", "zerolatency", 0);
+        
     }
 
         
@@ -113,7 +125,6 @@ int main(int argc, char** argv)
     /* open it */
     ret = avcodec_open2(c, codec, NULL);
     if (ret < 0) {
-        fprintf(stderr, "Could not open codec: %s\n", av_err2str(ret));
         exit(1);
     }
 
@@ -137,9 +148,9 @@ int main(int argc, char** argv)
         fprintf(stderr, "Could not allocate the video frame data\n");
         exit(1);
     }
-
+    int frames_to_be_encoded = 200;
     /* encode 1 second of video */
-    for (i = 0; i < 25; i++) {
+    for (i = 0; i < frames_to_be_encoded; i++) {
         fflush(stdout);
 
         /* make sure the frame data is writable */
@@ -149,19 +160,28 @@ int main(int argc, char** argv)
 
         /* prepare a dummy image */
         /* Y */
-        for (y = 0; y < c->height; y++) {
-            for (x = 0; x < c->width; x++) {
-                frame->data[0][y * frame->linesize[0] + x] = x + y + i * 3;
-            }
-        }
+        // for (y = 0; y < c->height; y++) {
+        //     for (x = 0; x < c->width; x++) {
+        //         frame->data[0][y * frame->linesize[0] + x] = x + y + i * 3;
+        //     }
+        // }
 
-        /* Cb and Cr */
-        for (y = 0; y < c->height / 2; y++) {
-            for (x = 0; x < c->width / 2; x++) {
-                frame->data[1][y * frame->linesize[1] + x] = 128 + y + i * 2;
-                frame->data[2][y * frame->linesize[2] + x] = 64 + x + i * 5;
-            }
-        }
+        // /* Cb and Cr */
+        // for (y = 0; y < c->height / 2; y++) {
+        //     for (x = 0; x < c->width / 2; x++) {
+        //         frame->data[1][y * frame->linesize[1] + x] = 128 + y + i * 2;
+        //         frame->data[2][y * frame->linesize[2] + x] = 64 + x + i * 5;
+        //     }
+        // }
+
+        //从yuv文件中读取数据
+
+        // Y
+        fread(frame->data[0], 1, c->width * c->height, f_input);
+        // Cb
+        fread(frame->data[1], 1, c->width * c->height / 4, f_input);
+        // Cr
+        fread(frame->data[2], 1, c->width * c->height / 4, f_input);
 
         frame->pts = i;
 
