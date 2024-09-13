@@ -9,11 +9,20 @@ using namespace std;
 
 
 int main(){
-    string input_file = "C:/Users/Administrator/Documents/sequences/ParkScene_1920x1080_24.yuv";
+    string input_file = "/home/xiangjie/ParkScene_1920x1080_24.yuv";
     string output_file = "test.bin";
+
+    cout << input_file << endl;
+
+    //if the file is not found, exit
 
     ifstream input(input_file, ios::binary);
     ofstream output(output_file, ios::binary);
+
+    if (!input.is_open()){
+        cout << "File not found" << endl;
+        return 1;
+    }
 
     MyEncoder encoder;
 
